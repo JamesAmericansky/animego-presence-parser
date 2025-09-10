@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AnimeGO Client Parser
 // @match        https://animego.me/*
-// @match        https://kodik.info/seria/*
+// @match        https://kodik.info/*
 // @run-at       document-end
 // ==/UserScript==
 

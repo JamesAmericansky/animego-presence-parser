@@ -16,9 +16,10 @@ client.login({ clientId: CLIENT_ID });
 
 const wsServer = new WebSocketServer({ port: 3000 });
 
+let lastAnimeTitle = null;
+
 let animeData = {},
   kodikData = {};
-
 
 wsServer.on("connection", (ws) => {
   console.log("Client connected!");
@@ -59,7 +60,7 @@ async function updateRPC(client, mergedData) {
   try {
     if (!mergedData) return;
 
-    const {
+    let {
       title,
       imageLink,
       episode,
@@ -69,16 +70,16 @@ async function updateRPC(client, mergedData) {
       episodeLength,
     } = mergedData;
 
-    // Cache system
-    let resizedURL = IMAGE_CACHE.get(imageLink);
-    if (!resizedURL && imageLink) {
-      resizedURL = await resizeImage(imageLink, 750, 1050);
-      if (resizedURL) {
-        IMAGE_CACHE.set(imageLink, resizedURL);
-      } else {
-        IMAGE_CACHE.set(imageLink, "main-icon");
-      }
+    if (
+      title !== lastAnimeTitle &&
+      episodeCurrentPosition &&
+      episodeCurrentPosition !== "00:00"
+    ) {
+      episodeCurrentPosition = "00:00";
     }
+    lastAnimeTitle = title;
+
+    let resizedURL = await getOrCacheImageLink(imageLink);
 
     checkAFK(client, isPlaying); // Resets user's activity if videoplayer is paused for a long time
     if (isAFK) return;
@@ -101,6 +102,21 @@ async function updateRPC(client, mergedData) {
 
 let AFKTimer = null;
 let isAFK = false;
+
+async function getOrCacheImageLink(imageLink) {
+  let resizedURL = IMAGE_CACHE.get(imageLink);
+  if (!resizedURL && imageLink) {
+    resizedURL = await resizeImage(imageLink, 750, 1050);
+    if (resizedURL) {
+      IMAGE_CACHE.set(imageLink, resizedURL);
+      return resizedURL;
+    } else {
+      IMAGE_CACHE.set(imageLink, "main-icon");
+      return null;
+    }
+  }
+  return resizedURL;
+}
 
 function checkAFK(client, isPlaying) {
   if (!isPlaying) {

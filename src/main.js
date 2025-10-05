@@ -8,13 +8,19 @@ import resizeImage from "../utils/imageResizeUtil.js";
 const CLIENT_ID = process.env.CLIENT_ID;
 if (!CLIENT_ID) throw new Error("CLIENT_ID .env variable is undefined.");
 
+// --- Constants and Globals ---
+
 const AFK_TIMEOUT_MS = 90 * 1000;
 const IMAGE_CACHE = new Map();
+
+// --- Initializations ---
 
 const client = new RPC.Client({ transport: "ipc" });
 client.login({ clientId: CLIENT_ID });
 
 const wsServer = new WebSocketServer({ port: 3000 });
+
+// --- Main code ---
 
 let lastAnimeTitle = null;
 

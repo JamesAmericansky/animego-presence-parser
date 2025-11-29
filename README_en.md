@@ -52,7 +52,9 @@ npm install
 node src/main.js
 ```
 
-### 5. Install the userscript
+### 5. Install the userscript or the extensions
+
+**Installing the UserScript:**
 
 1. Install [Tampermonkey](https://www.tampermonkey.net/) or a similar browser extension
 2. Copy the contents of `src/userscript.js` and create a new userscript in the extension
@@ -61,13 +63,19 @@ node src/main.js
 
 3. Save the script and open animego.me
 
+**Installing the browser extension:**
+
+1. Enter chrome://extensions (or your browser’s equivalent) into the address bar.
+2. Drag and drop the extension folder into the extensions page.
+3. Open any anime page on animego.me and verify that the extension works.
+
 ### 6. Load assets (optional)
 
 1. Go to your discord app webpage (where you've copied the client id) and click the Rich Presence section button
 2. Load Art Assets from the assets folder with names pause.png and play.png
 
 ## Usage
-
+- Run the application (Step 4)
 - Open an anime page on animego.me
 - Your Discord status will update automatically
 

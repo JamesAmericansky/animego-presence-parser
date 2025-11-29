@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "AnimeGO",
+  "version": "1.0",
+  "description": "AnimeGO Discord RPC",
+  "permissions": ["tabs", "scripting"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://animego.me/*", "*://kodik.info/*"],
+      "js": ["content.js"],
+      "all_frames": true
+    }
+  ],
+  "icons": {
+    "16": "icon.ico",
+    "32": "icon.ico",
+    "48": "icon.ico",
+    "128": "icon.ico"
+  },
+  "action": {
+    "default_icon": {
+      "16": "icon.ico",
+      "32": "icon.ico",
+      "48": "icon.ico",
+      "128": "icon.ico"
+    }
+  }
+}

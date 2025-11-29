@@ -85,7 +85,9 @@ async function updateRPC(client, mergedData) {
     }
     lastAnimeTitle = title;
 
-    let resizedURL = await getOrCacheImageLink(imageLink);
+    const resizedURL = imageLink
+      ? await getOrCacheImageLink(imageLink)
+      : null;
 
     checkAFK(client, isPlaying); // Resets user's activity if videoplayer is paused for a long time
     if (isAFK) return;

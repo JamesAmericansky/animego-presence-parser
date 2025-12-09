@@ -30,7 +30,7 @@ cd anime-presence-parser
 **Или скачайте ZIP (легче):**
 
 1. Перейдите на страницу[репозитория](https://github.com/your-username/anime-presence-parser)
-2. Нажмите**Code** →**Download ZIP**
+2. Нажмите **Code** →**Download ZIP**
 3. Распакуйте архив и откройте папку в терминале
 
 ### 2. Установите зависимости

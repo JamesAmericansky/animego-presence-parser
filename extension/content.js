@@ -14,6 +14,11 @@
   });
 
   setInterval(() => {
+    if (!chrome.runtime?.id) {
+      console.warn("Extension context is unavailable. Reload the page (Ctrl+F5).");
+      return;
+  }
+    
     let payload = null;
     if (location.hostname.includes("animego.me")) {
       payload = fetchAnime();
@@ -31,10 +36,10 @@
 
 function fetchAnime() {
   return {
-    title: document.querySelector(".anime-title h1")?.textContent || null,
+    title: document.querySelector(".entity__title h1")?.textContent || null,
     link: window.location.href,
     imageLink: getImageLink(),
-    episode: document.querySelector(".video-player__active")?.textContent || 0,
+    episode: getCurrentEpisode(),
     episodesAmount: getEpisodesAmount() || 0,
     source: "animego",
   };
@@ -51,30 +56,40 @@ function fetchKodik() {
   };
 }
 
-function parseDescription() {
-  let dtList = document.querySelectorAll("dl dt");
-  let description = {};
+// Legacy code, might be useful later for more detailed parsing of anime description
 
-  dtList.forEach((dt) => {
-    let key = dt.textContent.trim();
-    let value = dt.nextElementSibling.textContent.trim();
+// function parseDescription() {
+//   let dtList = document.querySelectorAll("dl dt");
+//   let description = {};
 
-    description[key] = value;
-  });
+//   dtList.forEach((dt) => {
+//     let key = dt.textContent.trim();
+//     let value = dt.nextElementSibling.textContent.trim();
 
-  return description;
-}
+//     description[key] = value;
+//   });
+
+//   return description;
+// }
 
 function getEpisodesAmount() {
-  let description = parseDescription();
-  return description["Эпизоды"];
+  let elements = document.querySelectorAll(".g-col-7.g-col-sm-12.g-col-md-8.g-col-lg-9.g-col-xl-9.text-break");
+  return elements[1]?.textContent?.trim() || 0;
+}
+
+function getCurrentEpisode() {
+  let episodeElements = Array.from(document.querySelectorAll(".player-video-bar__item.active .player-video-bar__number span"));
+  return episodeElements
+  .find(episode => episode.textContent !== "")?.textContent || "0";
 }
 
 function getImageLink() {
   let imageID = document
-    .querySelector(".anime-poster img")
+    .querySelector("img.image__img.rounded")
     ?.src?.split("/")
-    ?.at(-1) ?? null;
+    ?.slice(-2)
+    .join("/") ?? null;
+  console.log("Extracted image ID:", imageID);
   if (!imageID) return null;
-  return `https://animego.me/upload/anime/images/${imageID}`;
+  return `https://img.cdngos.com/anime/${imageID}`;
 }

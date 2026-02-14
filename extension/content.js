@@ -20,14 +20,17 @@
   }
     
     let payload = null;
-    if (location.hostname.includes("animego.me")) {
+
+    if (location.hostname.includes("animego.me") && !(location.pathname.startsWith("/cdn-iframe/"))) {
       payload = fetchAnime();
     } else if (location.hostname.includes("kodik.info")) {
       payload = fetchKodik();
+    } else if (location.hostname.includes("player.cdnvideohub.com")) {
+      payload = fetchCVH();
     }
 
     try {
-      chrome.runtime.sendMessage({ type: "animego.me", payload: payload });
+      chrome.runtime.sendMessage({ type: "animepresence", payload: payload });
     } catch (e) {
       console.error("sendMessage failed", e);
     }
@@ -41,6 +44,7 @@ function fetchAnime() {
     imageLink: getImageLink(),
     episode: getCurrentEpisode(),
     episodesAmount: getEpisodesAmount() || 0,
+    type: "website",
     source: "animego",
   };
 }
@@ -52,7 +56,21 @@ function fetchKodik() {
       document.querySelector(".fp-elapsed")?.textContent || "00:00",
     episodeLength:
       document.querySelector(".fp-duration")?.textContent || "00:00",
+    type: "videoplayer",
     source: "kodik",
+  };
+}
+
+function fetchCVH() {
+  let shadowRoot = document.querySelector(".shadow-root-container").shadowRoot
+  return {
+    isPlaying: !!(shadowRoot.querySelector(".video-container.s-c[data-is-playing]")?.getAttribute("data-is-playing") === "true"),
+    episodeCurrentPosition:
+      shadowRoot.querySelector(".current.s-22")?.textContent || "00:00",
+    episodeLength:
+      shadowRoot.querySelector(".duration.s-22")?.textContent || "00:00",
+    type: "videoplayer",
+    source: "cvh",
   };
 }
 
@@ -89,7 +107,6 @@ function getImageLink() {
     ?.src?.split("/")
     ?.slice(-2)
     .join("/") ?? null;
-  console.log("Extracted image ID:", imageID);
   if (!imageID) return null;
   return `https://img.cdngos.com/anime/${imageID}`;
 }

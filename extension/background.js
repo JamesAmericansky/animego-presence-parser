@@ -28,7 +28,7 @@ function connectWS() { // this function has a lot of debug info, you can remove 
 connectWS();
 
 chrome.runtime.onMessage.addListener((message, sender) => {
-  if (message?.type === "animego.me") {
+  if (message?.type === "animepresence") {
     const payload = {
       ...message.payload,
       _from: sender.url || sender.origin || "unknown",

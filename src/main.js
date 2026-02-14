@@ -25,7 +25,7 @@ const wsServer = new WebSocketServer({ port: 3000 });
 let lastAnimeTitle = null;
 
 let animeData = {},
-  kodikData = {};
+  videoplayerData = {};
 
 wsServer.on("connection", (ws) => {
   console.log("Client connected!");
@@ -39,16 +39,16 @@ wsServer.on("connection", (ws) => {
       return;
     }
 
-    switch (data.source) {
-      case "animego":
+    switch (data.type) {
+      case "website":
         animeData = data;
         break;
-      case "kodik":
-        kodikData = data;
+      case "videoplayer":
+        videoplayerData = data;
         break;
     }
 
-    const mergedData = { ...animeData, ...kodikData, source: "merged" };
+    const mergedData = { ...animeData, ...videoplayerData, source: "merged" };
 
     if (mergedData.title) {
       updateRPC(client, mergedData);

@@ -3,7 +3,7 @@
 
 > [!NOTE]
 >  **New update!**  
-> Added support for CVH videoplayer. It's recommended to update files.
+> Added support for Animelib website. It's recommended to update files.
 
 Anime Presence Parser is a tool for displaying your anime watching status in Discord from the AnimeGO website and the Kodik player (integrated into AnimeGO). Created in a couple of hours just for personal use. Inspired by the official Crunchyroll Discord integration. 😊
 

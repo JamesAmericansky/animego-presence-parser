@@ -9,7 +9,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://animego.me/*", "*://kodik.info/*", "*://player.cdnvideohub.com/*"],
+      "matches": ["*://animego.me/*", "*://kodik.info/*", "*://player.cdnvideohub.com/*", "*://*.animelib.org/*"],
       "js": ["content.js"],
       "all_frames": true
     }

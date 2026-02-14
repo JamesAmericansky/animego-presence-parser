@@ -22,7 +22,9 @@
     let payload = null;
 
     if (location.hostname.includes("animego.me") && !(location.pathname.startsWith("/cdn-iframe/"))) {
-      payload = fetchAnime();
+      payload = fetchAnimeGo();
+    } else if (location.hostname.includes("animelib.org")) {
+      payload = fetchAnimelib();
     } else if (location.hostname.includes("kodik.info")) {
       payload = fetchKodik();
     } else if (location.hostname.includes("player.cdnvideohub.com")) {
@@ -37,15 +39,30 @@
   }, 5000);
 })();
 
-function fetchAnime() {
+function fetchAnimeGo() {
   return {
     title: document.querySelector(".entity__title h1")?.textContent || null,
     link: window.location.href,
-    imageLink: getImageLink(),
-    episode: getCurrentEpisode(),
-    episodesAmount: getEpisodesAmount() || 0,
+    imageLink: getImageLinkAnimeGo(),
+    episode: getCurrentEpisodeAnimeGo(),
+    episodesAmount: getEpisodesAmountAnimeGo() || 0,
     type: "website",
     source: "animego",
+  };
+}
+
+function fetchAnimelib() {
+  return {
+    title: document.querySelector(".ar_c a")?.textContent || null,
+    link: window.location.href,
+    imageLink: document.querySelector(".cover__img._loaded")?.src || null,
+    episode: document.querySelector(".x2_f7.x2_g7").textContent.split(" ")[0] || "0",
+    episodesAmount: document.querySelectorAll(".x2_f7").length || 0,
+    isPlaying: document.querySelector(".fa-pause") || false,
+    episodeCurrentPosition: document.querySelector(".nf_nh span")?.textContent || "00:00",
+    episodeLength: document.querySelector(".nf_ni")?.textContent || "00:00",
+    type: "website",
+    source: "animelib",
   };
 }
 
@@ -90,18 +107,18 @@ function fetchCVH() {
 //   return description;
 // }
 
-function getEpisodesAmount() {
+function getEpisodesAmountAnimeGo() {
   let elements = document.querySelectorAll(".g-col-7.g-col-sm-12.g-col-md-8.g-col-lg-9.g-col-xl-9.text-break");
   return elements[1]?.textContent?.trim() || 0;
 }
 
-function getCurrentEpisode() {
+function getCurrentEpisodeAnimeGo() {
   let episodeElements = Array.from(document.querySelectorAll(".player-video-bar__item.active .player-video-bar__number span"));
   return episodeElements
   .find(episode => episode.textContent !== "")?.textContent || "0";
 }
 
-function getImageLink() {
+function getImageLinkAnimeGo() {
   let imageID = document
     .querySelector("img.image__img.rounded")
     ?.src?.split("/")
